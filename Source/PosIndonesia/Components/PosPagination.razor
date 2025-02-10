@@ -1,0 +1,101 @@
+﻿@namespace PosIndonesia
+@inherits PosComponentBase
+
+<nav class="pagination" role="navigation" aria-label="pagination">
+    @if (HasPreviousPage)
+    {
+        <a class="pagination-previous">Previous</a>
+    }
+    @if (HasNextPage)
+    {
+        <a class="pagination-next">Next page</a>
+    }
+    <ul class="pagination-list">
+        @foreach (var item in Paginate())
+        {
+            if (int.TryParse(item, out var value))
+            {
+                <li>
+                    <a class="pagination-link" aria-label="Goto page @value">@value</a>
+                </li>
+            }
+            else
+            {
+                <li>
+                    <span class="pagination-ellipsis">&hellip;</span>
+                </li>
+            }
+        }
+    </ul>
+</nav>
+
+@code {
+    const int MaxVisiblePages = 5;
+
+    [Parameter]
+    public int Page { get; set; }
+
+    [Parameter]
+    public EventCallback<int> PageChanged { get; set; }
+
+    [Parameter]
+    public int TotalPages { get; set; }
+
+    [Parameter]
+    public bool HasNextPage { get; set; }
+
+    [Parameter]
+    public bool HasPreviousPage { get; set; }
+
+    List<string> Paginate()
+    {
+        var pages = new List<string>();
+        if (TotalPages <= MaxVisiblePages)
+        {
+            for (int i = 0; i < TotalPages; i++)
+            {
+                pages.Add(i.ToString());
+            }
+        }
+        else
+        {
+            int halfWindow = MaxVisiblePages / 2;
+            int startPage = Math.Max(1, Page - halfWindow);
+            int endPage = Math.Min(TotalPages, Page + halfWindow);
+
+            if (startPage > 1)
+            {
+                startPage += 1;
+            }
+            if (endPage < TotalPages)
+            {
+                endPage -= 1;
+            }
+
+            for (int i = startPage; i <= endPage; i++)
+            {
+                pages.Add(i.ToString());
+            }
+
+            if (startPage > 2)
+            {
+                pages.Insert(0, "...");
+            }
+            if (startPage > 1)
+            {
+                pages.Insert(0, "1");
+            }
+
+            if (endPage < TotalPages - 1)
+            {
+                pages.Add("...");
+            }
+            if (endPage < TotalPages)
+            {
+                pages.Add(TotalPages.ToString());
+            }
+        }
+
+        return pages;
+    }
+}

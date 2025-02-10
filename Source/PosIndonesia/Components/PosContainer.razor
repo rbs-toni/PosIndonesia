@@ -1,0 +1,10 @@
+﻿@namespace PosIndonesia
+@inherits PosComponentBase
+
+<div class="@ClassNames">
+    @ChildContent
+</div>
+
+@code {
+    string? ClassNames => "container is-max-widescreen" + (!string.IsNullOrWhiteSpace(Class) ? $" {Class}" : "");
+}

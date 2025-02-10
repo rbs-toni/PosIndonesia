@@ -1,0 +1,29 @@
+﻿/* Error UI Styles */
+$error-ui-background: lightyellow;
+$error-ui-box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+$error-ui-padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+$error-ui-z-index: 1000;
+$error-ui-dismiss-right: 0.75rem;
+$error-ui-dismiss-top: 0.5rem;
+
+/* Error Boundary */
+$error-boundary-background: #b32121;
+$error-boundary-padding: 1rem 1rem 1rem 3.7rem;
+$error-boundary-color: white;
+
+/* Loading Progress */
+$loading-progress-width: 8rem;
+$loading-progress-height: 8rem;
+$loading-progress-margin: 20vh auto 1rem auto;
+$loading-progress-stroke: #e0e0e0;
+$loading-progress-stroke-width: 0.6rem;
+$loading-progress-active-stroke: #1b6ec2;
+$loading-progress-transition: stroke-dasharray 0.05s ease-in-out;
+$loading-progress-text-inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
+
+/* Color */
+$color-gutter: #e2e2e3;
+$color-brand: #f56565;
+
+/* Navbar */
+$nav-height: 64px;

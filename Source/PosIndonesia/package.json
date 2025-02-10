@@ -1,0 +1,15 @@
+{
+  "name": "posindonesia",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "sass --watch --no-source-map Styles/index.scss:wwwroot/PosIndonesia.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "sass": "^1.84.0"
+  }
+}

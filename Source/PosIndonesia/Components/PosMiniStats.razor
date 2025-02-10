@@ -1,0 +1,31 @@
+﻿@namespace PosIndonesia
+@inherits PosComponentBase
+
+<nav class="level">
+    <div class="level-item has-text-centered">
+        <div>
+            <p class="heading">Provinsi</p>
+            <p class="title">@ProvincesCount</p>
+        </div>
+    </div>
+    <div class="level-item has-text-centered">
+        <div>
+            <p class="heading">Kab./Kota</p>
+            <p class="title">@RegenciesCount</p>
+        </div>
+    </div>
+    <div class="level-item has-text-centered">
+        <div>
+            <p class="heading">Kecamatan</p>
+            <p class="title">@DistrictsCount</p>
+        </div>
+    </div>
+    <div class="level-item has-text-centered">
+        <div style="width: 100%">
+            <p class="heading" style="width: 100%">Kelurahan</p>
+            <p class="title" style="width: 100%">
+                @VillagesCount
+            </p>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,20 @@
+﻿.TH {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    position: relative;
+}
+
+::deep.TH .pos-icon {
+    cursor: pointer;
+}
+
+.THIcon {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    font-size: .8125rem;
+    color: hsla(var(--bulma-text-h),var(--bulma-text-s),var(--bulma-text-strong-l),0.3);
+}

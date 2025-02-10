@@ -1,0 +1,164 @@
+﻿@namespace PosIndonesia
+@inherits PosComponentBase
+
+@if (Paged?.HasData == true)
+{
+    <PosContainer Class="px-2 py-1 is-flex is-justify-content-space-between" Style="position: sticky">
+        <div class="select">
+            <select>
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+            </select>
+        </div>
+        <PosPagination Page="@Paged!.Page"
+                       TotalPages="@Paged!.TotalPages"
+                       HasNextPage="@Paged.HasNextPage"
+                       HasPreviousPage="@Paged.HasPreviousPage" />
+    </PosContainer>
+    <PosContainer Class="mb-4">
+        <table class="table is-fullwidth is-hoverable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>
+                        <div class="TH">
+                            Kodepos
+                            <span class="THIcon">
+                                @{
+                                    var codeindex = sortOrders.IndexOf("code");
+                                }
+                                @(codeindex != -1 ? codeindex + 1 : "")
+                                <PostSortOrder Field="code" OrderChanged="OrderChanged" />
+                            </span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="TH">
+                            Provinsi
+                            <span class="THIcon">
+                                @{
+                                    var provinceindex = sortOrders.IndexOf("province");
+                                }
+                                @(provinceindex != -1 ? provinceindex + 1 : "")
+                                <PostSortOrder Field="province" OrderChanged="OrderChanged" />
+                            </span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="TH">
+                            Kota/Kabupaten
+                            <span class="THIcon">
+                                @{
+                                    var regencyindex = sortOrders.IndexOf("regency");
+                                }
+                                @(regencyindex != -1 ? regencyindex + 1 : "")
+                                <PostSortOrder Field="regency" OrderChanged="OrderChanged" />
+                            </span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="TH">
+                            Kecamatan
+                            <span class="THIcon">
+                                @{
+                                    var districtindex = sortOrders.IndexOf("district");
+                                }
+                                @(districtindex != -1 ? districtindex + 1 : "")
+                                <PostSortOrder Field="district" OrderChanged="OrderChanged" />
+                            </span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="TH">
+                            Kelurahan
+                            <span class="THIcon">
+                                @{
+                                    var villageindex = sortOrders.IndexOf("village");
+                                }
+                                @(villageindex != -1 ? villageindex + 1 : "")
+                                <PostSortOrder Field="village" OrderChanged="OrderChanged" />
+                            </span>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Paged?.HasData == true)
+                {
+                    foreach (var (item, idx) in Paged.Items!.Select((x, y) => (x, y)))
+                    {
+                        <tr @onclick=@(() => PostalSelectedHandler(item)) class="is-clickable">
+                            <td>@(idx + 1)</td>
+                            <th>@item.Code</th>
+                            <td>@item.Province</td>
+                            <td>@item.Regency</td>
+                            <td>@item.District</td>
+                            <td>@item.Village</td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </PosContainer>
+}
+
+@code {
+    SortOrderCollection sortOrders = new();
+
+    [Parameter]
+    public PagedPostal? Paged { get; set; }
+
+    [Parameter]
+    public EventCallback<Postal> OnPostalSelected { get; set; }
+
+    [Parameter]
+    public EventCallback<SortOrderCollection> SortOrderChanged { get; set; }
+
+    void OrderChanged(string field, int order)
+    {
+        var sortOrder = new SortOrder(field, OrderToDirection(order));
+        if (sortOrders.Any(x => x.Name == field))
+        {
+
+            var existedSortOrder = sortOrders.FirstOrDefault(x => x.Name == field);
+            if (existedSortOrder != null)
+            {
+                if (order == 3)
+                {
+                    sortOrders.Remove(existedSortOrder);
+                }
+                else
+                {
+
+                    existedSortOrder.Dir = OrderToDirection(order);
+                }
+            }
+        }
+        else
+        {
+            sortOrders.Add(sortOrder);
+        }
+        SortOrderChanged.InvokeAsync(sortOrders);
+    }
+
+    Task PostalSelectedHandler(Postal postal)
+    {
+        return OnPostalSelected.InvokeAsync(postal);
+    }
+
+    string OrderToDirection(int order)
+    {
+        if (order == 1)
+        {
+            return "asc";
+        }
+        else if (order == 2)
+        {
+            return "desc";
+        }
+        else return "";
+    }
+}

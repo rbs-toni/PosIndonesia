@@ -1,0 +1,40 @@
+﻿@namespace PosIndonesia
+@inherits PosComponentBase
+
+<div class="field has-addons">
+    <div class="control is-expanded">
+        <input class="input"
+               type="text"
+               placeholder="Nama daerah"
+               @bind-value=_searchString
+               @bind-value:after=AfteSearch>
+    </div>
+    <div class="control">
+        <button class="button is-info">
+            Cari
+        </button>
+    </div>
+</div>
+
+@code {
+    string? _searchString;
+
+    [Parameter]
+    public string? SearchString { get; set; }
+
+    [Parameter]
+    public EventCallback<string> SearchStringChanged { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        SearchString = _searchString;
+    }
+
+    void AfteSearch()
+    {
+        if (!string.IsNullOrWhiteSpace(_searchString) && _searchString != SearchString)
+        {
+            SearchStringChanged.InvokeAsync(_searchString);
+        }
+    }
+}

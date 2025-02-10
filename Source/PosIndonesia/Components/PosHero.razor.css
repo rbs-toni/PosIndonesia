@@ -1,0 +1,15 @@
+﻿.PosHero {
+    position: sticky;
+    top: var( --bulma-navbar-height);
+    z-index: 1;
+    background-color: var(--bulma-scheme-main);
+}
+
+.hero .title {
+    color: var(--pos-color-brand);
+    margin-bottom: 0;
+}
+
+.hero .control {
+    margin-bottom: var(--bulma-block-spacing);
+}

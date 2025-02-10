@@ -1,0 +1,19 @@
+﻿.list-inline-dots {
+    display: inline-flex;
+    flex-wrap: wrap;
+}
+
+    .list-inline-dots > * + ::before, .list-inline-dots > :not(:last-child) {
+        margin-right: .5rem;
+    }
+
+    .list-inline-dots > * + ::before {
+        content: "·";
+        color: #707987;
+    }
+
+.link-secondary {
+    color: #707987;
+    text-decoration: none;
+    transition: color .3s;
+}

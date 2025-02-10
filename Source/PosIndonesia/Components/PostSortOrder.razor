@@ -1,0 +1,61 @@
+﻿@namespace PosIndonesia
+
+<span class="@ClassNames" @onclick=ChangeOrder></span>
+
+@code {
+    [Parameter, EditorRequired]
+    public required string Field { get; set; }
+
+    /// <summary>
+    /// 1 is for ascending
+    /// 2 is for descending
+    /// 3 is for indeterminate
+    /// </summary>
+    [Parameter]
+    public int Order { get; set; } = 3;
+
+    [Parameter]
+    public Action<string, int>? OrderChanged { get; set; }
+
+    string ClassNames => "pos-icon" + GenerateIconName();
+
+    string GenerateIconName()
+    {
+        if (Order == 1)
+        {
+            return " icon-arrow-drop-up";
+        }
+        else if (Order == 2)
+        {
+            return " icon-arrow-drop-down";
+        }
+        else if (Order == 3)
+        {
+            return " icon-remove";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    void ChangeOrder()
+    {
+        if (Order == 1)
+        {
+            Order = 2;
+        }
+        else if (Order == 2)
+        {
+            Order = 3;
+        }
+        else if (Order == 3)
+        {
+            Order = 1;
+        }
+        if (OrderChanged != null)
+        {
+            OrderChanged(Field, Order);
+        }
+    }
+}

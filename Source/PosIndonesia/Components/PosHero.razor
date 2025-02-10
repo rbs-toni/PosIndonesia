@@ -1,0 +1,78 @@
+﻿@namespace PosIndonesia
+@inherits PosComponentBase
+
+<div Id="@Id" class="PosHero">
+    <PosContainer>
+        <section class="hero">
+            <div class="hero-body is-flex">
+                <div class="mr-5">
+                    <p class="title">Kodepos Indonesia</p>
+                    <div class="control">
+                        <div class="tags has-addons">
+                            <span class="tag is-dark">v</span>
+                            <span class="tag is-info">1.0.0</span>
+                        </div>
+                    </div>
+                    <p class="subtitle">Dapatkan informasi lengkap mengenai kode pos di seluruh wilayah Indonesia.</p>
+                    <PosSearch @bind-SearchString=SearchString @bind-SearchString:after=OnSearchStringChanged />
+                    <PosMiniStats ProvincesCount="ProvincesCount"
+                                  DistrictsCount="DistrictsCount"
+                                  RegenciesCount="RegenciesCount"
+                                  VillagesCount="VillagesCount" />
+                </div>
+                <PosLeaflet @ref=_posLeaflet />
+            </div>
+        </section>
+    </PosContainer>
+</div>
+
+@code {
+    LatLng? _latLng;
+
+    [Parameter]
+    public LatLng? LatLng
+    {
+        get => _latLng; set
+        {
+            if (_latLng == value)
+            {
+                return;
+            }
+            _latLng = value;
+            if (_latLng != null)
+            {
+                SetView(_latLng);
+            }
+        }
+    }
+
+    [Parameter]
+    public string? SearchString { get; set; }
+
+    [Parameter]
+    public EventCallback<string> SearchStringChanged { get; set; }
+
+    [Parameter]
+    public int ProvincesCount { get; set; }
+
+    [Parameter]
+    public int DistrictsCount { get; set; }
+
+    [Parameter]
+    public int RegenciesCount { get; set; }
+
+    [Parameter]
+    public int VillagesCount { get; set; }
+
+    PosLeaflet _posLeaflet;
+
+    Task SetView(LatLng latLng)
+    {
+        return _posLeaflet.SetViewAsync(latLng);
+    }
+
+    void OnSearchStringChanged()
+    {
+        SearchStringChanged.InvokeAsync(SearchString);
+    }
+}

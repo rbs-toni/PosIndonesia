@@ -1,0 +1,33 @@
+﻿@page "/toc/{Hash}"
+
+<PosContainer>
+    <section class="section">
+        <div class="columns">
+            <div class="column is-one-quarter">
+                <aside class="menu">
+                    <ul class="menu-list">
+                        <li><a href="/toc/terms-of-service" class=@IsActive("terms-of-service")>Term of service</a></li>
+                        <li><a href="/toc/privacy-policy" class=@IsActive("privacy-policy")>Privacy policy</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="column">
+                @if (Hash?.Equals("terms-of-service")==true)
+                {
+                    <h1>Term of service</h1>
+                }
+                @if (Hash?.Equals("privacy-policy") == true)
+                {
+                    <h1>Privacy policy</h1>
+                }
+            </div>
+        </div>
+    </section>
+</PosContainer>
+
+@code {
+    [Parameter]
+    public string? Hash { get; set; }
+
+    string IsActive(string hash) => Hash?.Equals(hash) == true ? "is-active" : "";
+}
