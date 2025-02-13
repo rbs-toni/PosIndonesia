@@ -4,19 +4,20 @@
 <nav class="pagination" role="navigation" aria-label="pagination">
     @if (HasPreviousPage)
     {
-        <a class="pagination-previous">Previous</a>
+        <a class="pagination-previous" @onclick=@(() => GoToPage(Page - 1))>Previous</a>
     }
     @if (HasNextPage)
     {
-        <a class="pagination-next">Next page</a>
+        <a class="pagination-next" @onclick=@(() => GoToPage(Page + 1))>Next page</a>
     }
     <ul class="pagination-list">
         @foreach (var item in Paginate())
         {
-            if (int.TryParse(item, out var value))
+            var cssNames = Page == item ? "pagination-link is-current" : "pagination-link";
+            if (item != -1)
             {
                 <li>
-                    <a class="pagination-link" aria-label="Goto page @value">@value</a>
+                    <a class="@cssNames" aria-label="Goto page @item" @onclick=@(() => GoToPage(item))>@item</a>
                 </li>
             }
             else
@@ -47,14 +48,19 @@
     [Parameter]
     public bool HasPreviousPage { get; set; }
 
-    List<string> Paginate()
+    Task GoToPage(int page)
     {
-        var pages = new List<string>();
+        return PageChanged.InvokeAsync(page);
+    }
+
+    List<int> Paginate()
+    {
+        var pages = new List<int>();
         if (TotalPages <= MaxVisiblePages)
         {
             for (int i = 0; i < TotalPages; i++)
             {
-                pages.Add(i.ToString());
+                pages.Add(i);
             }
         }
         else
@@ -74,25 +80,25 @@
 
             for (int i = startPage; i <= endPage; i++)
             {
-                pages.Add(i.ToString());
+                pages.Add(i);
             }
 
             if (startPage > 2)
             {
-                pages.Insert(0, "...");
+                pages.Insert(0, -1);
             }
             if (startPage > 1)
             {
-                pages.Insert(0, "1");
+                pages.Insert(0, 1);
             }
 
             if (endPage < TotalPages - 1)
             {
-                pages.Add("...");
+                pages.Add(-1);
             }
             if (endPage < TotalPages)
             {
-                pages.Add(TotalPages.ToString());
+                pages.Add(TotalPages);
             }
         }
 

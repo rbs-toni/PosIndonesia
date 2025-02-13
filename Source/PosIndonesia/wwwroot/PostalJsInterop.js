@@ -1,7 +1,7 @@
 ﻿const DB_NAME = 'PostalDB'
 const STORE_NAME = 'postalData'
 const STATS_STORE = 'postalStats'
-const URL_SR = './_content/PosIndonesia/kodepos.json'
+const URL_SR = './_content/PosIndonesia/modified-kodepos.json'
 
 const openDB = () => new Promise((resolve, reject) => {
   const request = indexedDB.open(DB_NAME, 1)
@@ -66,10 +66,10 @@ export const getStats = async (version) => {
 
   const data = await get(version)  // Fetch postal data
   const stats = {
-    provincesCount: new Set(data.map(item => item.province)).size,
-    regenciesCount: new Set(data.map(item => item.regency)).size,
-    districtsCount: new Set(data.map(item => item.district)).size,
-    villagesCount: new Set(data.map(item => item.village)).size
+    provincesCount: new Set(data.map(item => item.Province)).size,
+    regenciesCount: new Set(data.map(item => item.Regency)).size,
+    districtsCount: new Set(data.map(item => item.District)).size,
+    villagesCount: new Set(data.map(item => item.Village)).size
   }
 
   // Cache the newly calculated stats in IndexedDB

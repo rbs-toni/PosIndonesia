@@ -2,7 +2,6 @@
 @using PosIndonesia.Models
 @using PosIndonesia.Services
 @inject PostalInterop Postal
-
 <PageTitle>Home</PageTitle>
 
 <PosHero @bind-SearchString="@_searchString"
@@ -15,49 +14,6 @@
 
 <PosPagedPostal Paged="_pagedPostal"
                 OnPostalSelected="OnPostalSelected"
+                PageSizeChanged="OnPageSizeChanged"
+                PageChanged="OnPageChanged"
                 SortOrderChanged="OnSortOrderChanged" />
-
-@code {
-    string? _searchString;
-
-    MiniStats? _miniStats;
-    PagedPostal? _pagedPostal;
-    LatLng? _latLng;
-    SortOrderCollection _orders = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        _miniStats = await Postal.GetStatsAsync();
-        _pagedPostal = await Postal.GetPagedPostalAsync(_searchString, null, 1, 100);
-        StateHasChanged();
-    }
-
-    async Task OnSearchStringChanged()
-    {
-        _pagedPostal = await Postal.GetPagedPostalAsync(_searchString, _orders, _pagedPostal?.Page ?? 1, _pagedPostal?.PageSize ?? 100);
-    }
-
-    async Task OnSortOrderChanged(SortOrderCollection sortOrders)
-    {
-        _orders = sortOrders;
-        _pagedPostal = await Postal.GetPagedPostalAsync(_searchString, _orders, _pagedPostal?.Page ?? 1, _pagedPostal?.PageSize ?? 100);
-    }
-
-    string OrderToDirection(int order)
-    {
-        if (order == 1)
-        {
-            return "asc";
-        }
-        else if (order == 2)
-        {
-            return "desc";
-        }
-        else return "";
-    }
-
-    void OnPostalSelected(Postal postal)
-    {
-        _latLng = new LatLng(postal.Latitude, postal.Longitude);
-    }
-}

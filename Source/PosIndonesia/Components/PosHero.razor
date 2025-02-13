@@ -16,9 +16,9 @@
                     <p class="subtitle">Dapatkan informasi lengkap mengenai kode pos di seluruh wilayah Indonesia.</p>
                     <PosSearch @bind-SearchString=SearchString @bind-SearchString:after=OnSearchStringChanged />
                     <PosMiniStats ProvincesCount="ProvincesCount"
-                                  DistrictsCount="DistrictsCount"
-                                  RegenciesCount="RegenciesCount"
-                                  VillagesCount="VillagesCount" />
+                    DistrictsCount="DistrictsCount"
+                    RegenciesCount="RegenciesCount"
+                    VillagesCount="VillagesCount" />
                 </div>
                 <PosLeaflet @ref=_posLeaflet />
             </div>
@@ -64,6 +64,7 @@
     [Parameter]
     public int VillagesCount { get; set; }
 
+    bool IsSearching => !string.IsNullOrWhiteSpace(SearchString);
     PosLeaflet _posLeaflet;
 
     Task SetView(LatLng latLng)

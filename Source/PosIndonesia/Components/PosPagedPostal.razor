@@ -1,18 +1,20 @@
 ﻿@namespace PosIndonesia
+@using Microsoft.AspNetCore.Components.Routing
 @inherits PosComponentBase
 
 @if (Paged?.HasData == true)
 {
-    <PosContainer Class="px-2 py-1 is-flex is-justify-content-space-between" Style="position: sticky">
+    <PosContainer Class="px-2 py-1 is-flex is-justify-content-space-between">
         <div class="select">
-            <select>
-                <option>10</option>
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
+            <select @bind=_pageSize @bind:after=SetPageSize>
+                <option value="10" selected="@(_pageSize==10)">10</option>
+                <option value="25" selected="@(_pageSize==25)">25</option>
+                <option value="50" selected="@(_pageSize==50)">50</option>
+                <option value="100" selected="@(_pageSize==100)">100</option>
             </select>
         </div>
         <PosPagination Page="@Paged!.Page"
+                       PageChanged="OnPageChanged"
                        TotalPages="@Paged!.TotalPages"
                        HasNextPage="@Paged.HasNextPage"
                        HasPreviousPage="@Paged.HasPreviousPage" />
@@ -27,10 +29,10 @@
                             Kodepos
                             <span class="THIcon">
                                 @{
-                                    var codeindex = sortOrders.IndexOf("code");
+                                    var codeindex = sortOrders.IndexOf("Code");
                                 }
                                 @(codeindex != -1 ? codeindex + 1 : "")
-                                <PostSortOrder Field="code" OrderChanged="OrderChanged" />
+                                <PostSortOrder Field="Code" OrderChanged="OrderChanged" />
                             </span>
                         </div>
                     </th>
@@ -39,10 +41,10 @@
                             Provinsi
                             <span class="THIcon">
                                 @{
-                                    var provinceindex = sortOrders.IndexOf("province");
+                                    var provinceindex = sortOrders.IndexOf("Province");
                                 }
                                 @(provinceindex != -1 ? provinceindex + 1 : "")
-                                <PostSortOrder Field="province" OrderChanged="OrderChanged" />
+                                <PostSortOrder Field="Province" OrderChanged="OrderChanged" />
                             </span>
                         </div>
                     </th>
@@ -51,10 +53,10 @@
                             Kota/Kabupaten
                             <span class="THIcon">
                                 @{
-                                    var regencyindex = sortOrders.IndexOf("regency");
+                                    var regencyindex = sortOrders.IndexOf("Regency");
                                 }
                                 @(regencyindex != -1 ? regencyindex + 1 : "")
-                                <PostSortOrder Field="regency" OrderChanged="OrderChanged" />
+                                <PostSortOrder Field="Regency" OrderChanged="OrderChanged" />
                             </span>
                         </div>
                     </th>
@@ -63,10 +65,10 @@
                             Kecamatan
                             <span class="THIcon">
                                 @{
-                                    var districtindex = sortOrders.IndexOf("district");
+                                    var districtindex = sortOrders.IndexOf("District");
                                 }
                                 @(districtindex != -1 ? districtindex + 1 : "")
-                                <PostSortOrder Field="district" OrderChanged="OrderChanged" />
+                                <PostSortOrder Field="District" OrderChanged="OrderChanged" />
                             </span>
                         </div>
                     </th>
@@ -75,10 +77,10 @@
                             Kelurahan
                             <span class="THIcon">
                                 @{
-                                    var villageindex = sortOrders.IndexOf("village");
+                                    var villageindex = sortOrders.IndexOf("Village");
                                 }
                                 @(villageindex != -1 ? villageindex + 1 : "")
-                                <PostSortOrder Field="village" OrderChanged="OrderChanged" />
+                                <PostSortOrder Field="Village" OrderChanged="OrderChanged" />
                             </span>
                         </div>
                     </th>
@@ -89,7 +91,7 @@
                 {
                     foreach (var (item, idx) in Paged.Items!.Select((x, y) => (x, y)))
                     {
-                        <tr @onclick=@(() => PostalSelectedHandler(item)) class="is-clickable">
+                        <tr @key=item.UniqueKey() @onclick=@(() => PostalSelectedHandler(item)) class="is-clickable">
                             <td>@(idx + 1)</td>
                             <th>@item.Code</th>
                             <td>@item.Province</td>
@@ -107,6 +109,7 @@
 
 @code {
     SortOrderCollection sortOrders = new();
+    int _pageSize;
 
     [Parameter]
     public PagedPostal? Paged { get; set; }
@@ -116,6 +119,27 @@
 
     [Parameter]
     public EventCallback<SortOrderCollection> SortOrderChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> PageSizeChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> PageChanged { get; set; }
+
+    Task OnPageChanged(int page)
+    {
+        return PageChanged.InvokeAsync(page);
+    }
+
+    Task SetPageSize()
+    {
+        return PageSizeChanged.InvokeAsync(_pageSize);
+    }
+
+    protected override void OnInitialized()
+    {
+        _pageSize = Paged?.PageSize ?? 100;
+    }
 
     void OrderChanged(string field, int order)
     {

@@ -10,4 +10,8 @@ public record Postal
     public float Longitude { get; set; }
     public int Elevation { get; set; }
     public string? Timezone { get; set; }
+    public string UniqueKey()
+    {
+        return Guid.NewGuid().ToString("N");
+    }
 }

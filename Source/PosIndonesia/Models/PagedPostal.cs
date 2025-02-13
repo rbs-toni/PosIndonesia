@@ -8,5 +8,5 @@ public record PagedPostal
     public bool HasNextPage { get; set; }
     public bool HasPreviousPage { get; set; }
     public List<Postal>? Items { get; set; }
-    public bool HasData => Items?.Count() > 0;
+    public bool HasData => Items?.Count > 0;
 }
